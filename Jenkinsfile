@@ -5,6 +5,7 @@ pipeline{
         stage('Build_stage_windows') {
             steps {
                 bat '''
+                    npm audit fix --force
                     echo Installing dependencies...
                     npm ci
                     echo Building the project...
