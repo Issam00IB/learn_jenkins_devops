@@ -1,29 +1,39 @@
-pipeline{
+pipeline {
     agent any
 
     stages {
-        stage('Build_stage_windows') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
-                bat '''
-                    npm audit fix --force
-                    echo Installing dependencies...
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
                     npm ci
-                    echo Building the project...
                     npm run build
-                    dir
+                    ls -la
                 '''
             }
         }
 
-        stage('Test_Windows') {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
             steps {
-                bat '''
-                      IF EXIST build\\index.html (
-                           echo "build/index.html exists."
-                     ) ELSE (
-                           echo "build/index.html does not exist."
-                        )
-                    '''
+                sh '''
+                    test -f build/index.html
+                    npm test
+                '''
             }
         }
     }
