@@ -1,4 +1,4 @@
-pipeline {
+pipeline{
     agent any
 
     stages {
@@ -14,9 +14,15 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test_Windows') {
             steps {
-                echo "Test Stage"
+                bat '''
+                      IF EXIST build\\index.html (
+                           echo "build/index.html exists."
+                     ) ELSE (
+                           echo "build/index.html does not exist."
+                        )
+                    '''
             }
         }
     }
